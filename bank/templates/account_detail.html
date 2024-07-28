@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title> Account Detail </title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap');
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    .main{
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url(images/back.jpg);
+      background-position: center;
+      background-size: cover;
+    }
+    .profile-card{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 400px;
+      width: 100%;
+      border-radius: 25px;
+      padding: 30px;
+      border: 1px solid #ffffff40;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+      background-color: white;
+    }
+    .image{
+      position: relative;
+      height: 150px;
+      width: 150px;
+    }
+    .image .profile-pic{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    }
+    .data{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 15px;
+    }
+    .data h2{
+      font-size: 33px;
+      font-weight: 600;
+    }
+    span{
+      font-size: 18px;
+    }
+    .row{
+      display: flex;
+      align-items: center;
+      margin-top: 30px;
+    }
+    .row .info{
+      text-align: center;
+      padding: 0 20px;
+    }
+    .buttons{
+      display: flex;
+      align-items: center;
+      margin-top: 30px;
+    }
+    .buttons .btn{
+      color: #fff;
+      text-decoration: none;
+      margin: 0 20px;
+      padding: 8px 25px;
+      border-radius: 25px;
+      font-size: 18px;
+      white-space: nowrap;
+      background: linear-gradient(to left, #33ccff 0%, #ff99cc 100%);
+    }
+    .buttons .btn:hover{
+      box-shadow: inset 0 5px 20px rgba(0,0,0,0.4);
+    }
+    .transaction-history {
+      margin-top: 20px;
+      width: 100%;
+    }
+    .transaction-history h3 {
+      font-size: 24px;
+      font-weight: 500;
+    }
+    .transaction-history ul {
+      list-style: none;
+      padding: 0;
+    }
+    .transaction-history li {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="profile-card">
+      <div class="image">
+        <img src="https://i.pinimg.com/236x/14/ed/3e/14ed3e001d81459d5ebb5d86d1a3e7bf.jpg" alt="" class="profile-pic">
+      </div>
+      <div class="data">
+        <h2>Account Detail</h2><br>
+        <h3>User ID</h3>
+        <span>{{ user_id }}</span>
+      </div>
+      <div class="row">
+        <div class="info">
+          <h3>Username</h3>
+          <span>{{ account.user.username }}</span>
+        </div>
+        <div class="info">
+          <h3>Balance</h3>
+          <span>₹{{ account.balance }}</span>
+        </div>
+      </div>
+      <h2>Send Money</h2>
+      <form method="post" action="{% url 'send_money' %}">
+        {% csrf_token %}
+        <label for="receiver_id">Receiver's User ID:</label>
+        <input type="text" id="receiver_id" name="receiver_id" required>
+        <br>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" step="0.01" required>
+        <br>
+        <label for="password">Your Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <input type="submit" value="Send Money">
+      </form>
+      <h2>Cash Out</h2>
+      <form method="post" action="{% url 'cash_out' %}">
+        {% csrf_token %}
+        <label for="cash_out_amount">Amount:</label>
+        <input type="number" id="cash_out_amount" name="amount" step="0.01" required>
+        <br>
+        <input type="submit" value="Cash Out">
+      </form>
+      <div class="transaction-history">
+        <h3>Transaction History</h3>
+        <ul>
+          {% for transaction in transactions %}
+            <li>{{ transaction.transaction_type }} of ₹{{ transaction.amount }} {{ transaction.description }} on {{ transaction.timestamp }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="buttons">
+        <a href="{% url 'logout' %}" class="btn">Logout</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
